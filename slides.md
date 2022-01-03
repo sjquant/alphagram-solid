@@ -7,7 +7,8 @@ drawings:
   persist: false
 layout: intro
 fonts:
-  sans: 'Noto Sans KR'
+  sans: 'Apple SD Gothic Neo'
+  provider: 'none'
 ---
 
 # 개발자라면, SOLID 원칙
