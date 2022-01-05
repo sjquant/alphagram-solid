@@ -227,6 +227,8 @@ class MSTeamsReportSender(ReportSener):
 새로운 Sender가 추가된다면, ReportSender를 구현한 새로운 클래스만 추가해주면 된다!
 
 ---
+layout: center
+---
 
 # <span class="text-red-500">L</span>iskov Substitution
 
@@ -234,19 +236,65 @@ class MSTeamsReportSender(ReportSener):
 
 ## 리스코프 치환 원칙
 
-상위 타입의 객체를 하위 타입의 객체로 치환해도 상위 타입을 사용하는 프로그램은 정상적으로 동작해야 한다.
+자식 클래스가 부모 클래스를 대체하여도 프로그램이 의도한대로 동작하여야 한다.
 
 ---
 
-<style>
-h3 {
-  opacity: 1 !important;
-}
-</style>
+# BAD
 
-# <span class="text-red-500">I</span>nterface Segregation
+```py
+class Employee:
+    company_name = "스타커피"
+    raise_percentage = 1.02
 
-<div></div>
+    def __init__(self, name, wage):
+        self.name = name
+        self._wage = wage
+
+    def raise_pay(self):
+        self._wage *= self.raise_percentage
+
+class Cashier(Employee):
+    coffee_price = 3000
+
+    def raise_pay(self, raise_amount):
+        self.wage += self.raise_amount
+```
+
+---
+
+# Another Good
+
+
+
+---
+
+class Cashier(Employee):
+    raise_percentage = 1.03
+
+    def __init__(self, name, wage, number_sold=0):
+        super().__init__(name, wage)
+        self.number_sold = number_sold
+
+    def raise_pay(self, raise_amount):
+        self.wage += self.raise_amount
+---
+
+# Good
+
+```py
+class Cashier(Employee):
+    raise_percentage = 1.03
+
+    def __init__(self, name, wage, number_sold=0):
+        super().__init__(name, wage)
+        self.number_sold = number_sold
+
+    def raise_pay(self, raise_amount):
+        self.wage += self.raise_amount
+```
+
+---
 
 ## 인터페이스 분리 원칙 
 
@@ -262,4 +310,4 @@ h3 {
 
 <div></div>
 
-## 의존성 역정 원칙
+## 의존성 역전 원칙
