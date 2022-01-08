@@ -402,10 +402,101 @@ layout: center
 
 클래스는 자신이 이용하지 않는 메서드에 의존해서는 안된다.
 
-= 인터페이스계의 SRP
+= 인터페이스가 한가지 책임을 하게 해야한다. (의존성 ⬇️)
 
 ---
+layout: two-cols
+---
+
+# BAD
+
+```py
+class Character(abc.ABC)
+  @abc.abstractmehtod
+  def attack(self, other):
+    pass
+  
+  @abc.abstractmehtod
+  def talk(self, other):
+    pass
+
+  @abc.abstractmehtod
+  def move(self, x, y):
+    pass
+
+class Monster(Character):
+  def attack(self, other):
+    print("I attack {other}")
+
+  def talk(self, other):
+    pass # cannot talk
+  
+  def move(self, x, y):
+    print(f"I move to ({x}, {y})")
+```
+
+::right::
+
+```py
 
 
+
+class NPC(Character):
+  def attack(self, other):
+    pass # cannot attack
+  
+  def talk(self, other):
+    print(f"I talk to {other}")
+
+  def move(self, x, y):
+    pass # cannot move
+```
+
+- 사용하지 않는 인터페이스(추상클래스)의 메소드에도 의존
+- 사용하지 않는 메소드도 구현해야함
+
+---
+layout: two-cols
+---
+
+# GOOD
+
+```py
+class Attackable(abc.ABC)
+  @abc.abstractmehtod
+  def attack(self, other):
+    pass
+
+class Talkable(abc.ABC)
+  @abc.abstractmehtod
+  def talk(self, other):
+    pass
+
+class Movable(abc.ABC)
+  @abc.abstractmehtod
+  def move(self, x, y):
+    pass
+
+class Monster(Attackable, Movable):
+  def attack(self, other):
+    print("I attack {other}")
+  
+  def move(self, x, y):
+    print(f"I move to ({x}, {y})")
+```
+
+::right::
+
+```py
+
+
+
+class NPC(Talkable):
+  def talk(self, other):
+    print(f"I talk to {other}")
+    
+```
+
+---
 
 ## 의존성 역전 원칙
