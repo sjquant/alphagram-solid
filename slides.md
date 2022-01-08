@@ -563,5 +563,25 @@ class AlertService:
 - 하위 모듈과 상위 모듈이 모두 추상화된 모듈 `MessageSender`에 의존하게 함으로써 다른 모듈로서 변경이 자유로움
 
 ---
+layout: center
+---
 
+# SOLID는 이상향이다.
 
+<v-click>
+
+항상 지킬 수 있는 것은 아니다. (시간의 제약, 코드의 복잡도⬆️)
+
+</v-click>
+
+<v-click>
+
+그래도 우리가 항상 바라봐야하는 <span class="text-red-500">지향점</span>이다.
+
+</v-click>
+
+---
+layout: center
+---
+
+# 감사합니다.
