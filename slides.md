@@ -317,11 +317,9 @@ class Square(Shape):
 
 ::right::
 
+<br/><br/>
+
 ```py
-
-
-
-
 rect1 = Square(4)
 rect2 = Rectangle(4, 5)
 print(rect1.area) # 16
@@ -411,49 +409,42 @@ layout: two-cols
 # BAD
 
 ```py
-class Character(abc.ABC)
+class Character(abc.ABC):
   @abc.abstractmehtod
   def attack(self, other):
-    pass
+    print("I attack {other}")
   
   @abc.abstractmehtod
   def talk(self, other):
-    pass
+    print("I talk to {other}")
 
   @abc.abstractmehtod
   def move(self, x, y):
-    pass
+    print(f"I move to ({x}, {y})")
 
 class Monster(Character):
   def attack(self, other):
-    print("I attack {other}")
-
-  def talk(self, other):
-    pass # cannot talk
+    print("Monster attack {other}")
   
   def move(self, x, y):
-    print(f"I move to ({x}, {y})")
+    print(f"Monster move to ({x}, {y})")
+
+  # monster.talk 도 호출 가능 (가능해선 안됨)
 ```
 
 ::right::
 
+<br/><br/>
+
 ```py
-
-
-
 class NPC(Character):
-  def attack(self, other):
-    pass # cannot attack
-  
   def talk(self, other):
-    print(f"I talk to {other}")
+    print(f"NPC talk to {other}")
 
-  def move(self, x, y):
-    pass # cannot move
+  # npc.attack 이나 npc.move 도 호출 가능 (가능해선 안됨)
 ```
 
 - 사용하지 않는 인터페이스(추상클래스)의 메소드에도 의존
-- 사용하지 않는 메소드도 구현해야함
 
 ---
 layout: two-cols
@@ -462,41 +453,115 @@ layout: two-cols
 # GOOD
 
 ```py
-class Attackable(abc.ABC)
+class Attackable(abc.ABC):
   @abc.abstractmehtod
   def attack(self, other):
-    pass
+    print("I attack {other}")
 
-class Talkable(abc.ABC)
+class Talkable(abc.ABC):
   @abc.abstractmehtod
   def talk(self, other):
-    pass
+    print(f"I talk to {other}")
 
-class Movable(abc.ABC)
+class Movable(abc.ABC):
   @abc.abstractmehtod
   def move(self, x, y):
-    pass
+    print(f"I move to ({x}, {y})")
 
 class Monster(Attackable, Movable):
   def attack(self, other):
-    print("I attack {other}")
+    print("Monster attack {other}")
   
   def move(self, x, y):
-    print(f"I move to ({x}, {y})")
+    print(f"Monster move to ({x}, {y})")
 ```
 
 ::right::
 
+<br/><br/>
+
 ```py
-
-
-
 class NPC(Talkable):
   def talk(self, other):
-    print(f"I talk to {other}")
+    print(f"NPC talk to {other}")
     
 ```
 
 ---
+layout: center
+---
+
+# <span class="text-red-500">D</span>ependcy Inversion
+
+<div></div>
 
 ## 의존성 역전 원칙
+
+- 상위 모듈은 하위 모듈에 의존해서는 안된다. **둘 다 추상 모듈에 의존**해야 한다.
+- 추상 모듈은 구체화된 모듈에 의존해서는 안된다. **구체화된 모듈은 추상 모듈에 의존해야 한다.**
+
+---
+
+# BAD
+
+```py
+class TeamsBot:
+  def send_message_to_teams(self, message):
+    # send mesage logic is here
+
+class SlackBot:
+  def send_alert_to_slack(self, channel, message):
+    # send mesage logic is here
+
+class AlertService:
+
+  def __init__(self):
+    self.teams_bot = TeamsBot()
+
+  def alert(self, message):
+    self.teams_bot.send_message_to_teams(message)
+```
+
+- 상위모듈 (`AlertService`)이 하위모듈 (`TeamsBot`)에 의존하고 있음
+- Alert를 이제 Teams가 아닌 Slack에 보내야한다면 상위 모듈 (AlertService) alert로직이 수정되어야 함 (OCP 위반) 
+
+---
+layout: two-cols
+---
+
+# Good
+
+```py
+class MessageSender(abc.ABC):
+  @abc.abstractmethod
+  def send(self, message):
+    pass
+
+class TeamsBot(MessageSender):
+  def send(self, message):
+    # send message logic
+
+class SlackBot(MessageSender):
+  def __init__(self, channel):
+    self.channel = channel
+
+  def send(self, message):
+    # send message logic
+
+class AlertService:
+  def __init__(self, sender):
+    self.sender = sender
+
+  def alert(message):
+    sender.send(message)
+```
+
+::right::
+
+<br/><br/>
+
+- 하위 모듈과 상위 모듈이 모두 추상화된 모듈 `MessageSender`에 의존하게 함으로써 다른 모듈로서 변경이 자유로움
+
+---
+
+
