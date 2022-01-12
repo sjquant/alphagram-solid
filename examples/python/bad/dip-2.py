@@ -1,7 +1,11 @@
 class MessageSender(abc.ABC):
-  @abc.abstractmehtod
   def send(self, message):
-      pass
+    if isinstance(self, TeamsBot):
+        self.send_message_to_teams(message)
+    elif isinstance(self, Slack):
+        self.send_message_to_slack(channel, message)
+    else:
+        raise ValueError("Something went wrong")
 
 class TeamsBot:
     def send_message_to_teams(self, message):
