@@ -11,8 +11,8 @@ class BaseReportSender(abc.ABC):
 
 
 class EmailSender(BaseReportSender):
-    def __init__(self, report):
-        super().__init__(report, from_email)
+    def __init__(self, report, from_email):
+        super().__init__(report)
         self._from = from_email
 
     def send(self, to):

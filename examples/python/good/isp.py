@@ -1,3 +1,5 @@
+import abc
+
 class Attackable(abc.ABC):
     def attack(self, other):
         print(f"I attack {other}")

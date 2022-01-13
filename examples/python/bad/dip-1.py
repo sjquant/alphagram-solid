@@ -14,4 +14,4 @@ class AlertService:
         self.teams_bot.send_message_to_teams(message)
 
 alert_service = AlertService()
-alert_service.alert()
+alert_service.alert("Hello, World")

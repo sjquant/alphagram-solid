@@ -1,3 +1,5 @@
+import abc
+
 class Shape(abc.ABC):
     @property
     @abc.abstractmethod
@@ -7,7 +9,7 @@ class Shape(abc.ABC):
 class Rectangle(Shape):
     def __init__(self, w, h):
         self._width = w
-        self._heiht = h
+        self._height = h
 
     @property
     def area(self):
@@ -17,6 +19,7 @@ class Square(Shape):
     def __init__(self, l):
         self._length = l
 
+    @property
     def area(self):
         return self._length * self._length
 

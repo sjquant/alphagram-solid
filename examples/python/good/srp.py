@@ -17,7 +17,7 @@ class Writer:
 
 
 reader = Reader()
-parser = Praser()
+parser = Parser()
 writer = Writer()
 
 data = reader.read()

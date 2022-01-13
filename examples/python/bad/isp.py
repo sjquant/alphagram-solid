@@ -1,13 +1,11 @@
+import abc
 class Character(abc.ABC):
-    @abc.abstractmehtod
     def attack(self, other):
         print(f"I attack {other}")
   
-    @abc.abstractmehtod
     def talk(self, other):
         print(f"I talk to {other}")
 
-    @abc.abstractmehtod
     def move(self, x, y):
         print(f"I move to ({x}, {y})")
 

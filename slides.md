@@ -290,8 +290,8 @@ class BaseReportSender(abc.ABC):
         pass
 
 class EmailSender(BaseReportSender):
-    def __init__(self, report):
-        super().__init__(report, from_email)
+    def __init__(self, report, from_email):
+        super().__init__(report)
         self._from = from_email
 
     def send(self, to):
@@ -407,7 +407,7 @@ class Shape(abc.ABC):
 class Rectangle(Shape):
     def __init__(self, w, h):
         self._width = w
-        self._heiht = h
+        self._height = h
 
     @property
     def area(self):
@@ -417,6 +417,7 @@ class Square(Shape):
     def __init__(self, l):
         self._length = l
 
+    @property
     def area(self):
         return self._length * self._length
 ```
@@ -680,7 +681,7 @@ class AlertService:
         self.teams_bot.send_message_to_teams(message)
 
 alert_service = AlertService()
-alert_service.alert()
+alert_service.alert("Hello, World")
 ```
 
 ::right::
@@ -700,28 +701,21 @@ class MessageSender(abc.ABC):
   def send(self, message):
     if isinstance(self, TeamsBot):
         self.send_message_to_teams(message)
-    elif isinstance(self, Slack):
-        self.send_message_to_slack(channel, message)
+    elif isinstance(self, SlackBot):
+        self.send_message_to_slack(message)
     else:
         raise ValueError("Something went wrong")
 
-class TeamsBot:
+class TeamsBot(MessageSender):
     def send_message_to_teams(self, message):
         print("send message to teams")
 
-class SlackBot:
+class SlackBot(MessageSender):
     def __init__(self, channel):
         self.channel = channel
 
-    def send_alert_to_slack(self, message):
+    def send_message_to_slack(self, message):
         print("send message to slack")
-
-class AlertService:
-  def __init__(self, sender):
-    self.sender = sender
-
-  def alert(message):
-    sender.send(message)
 ```
 
 ::right::
@@ -729,6 +723,13 @@ class AlertService:
 <br/><br/>
 
 ```py
+class AlertService:
+  def __init__(self, sender):
+    self.sender = sender
+
+  def alert(message):
+    sender.send(message)
+
 sender = TeamsBot()
 alert_service = AlertService(sender)
 alert_service.alert()
@@ -748,27 +749,20 @@ layout: two-cols
 
 ```py
 class MessageSender(abc.ABC):
-    @abc.abstractmethod
-    def send(self, message):
-        pass
-
-class TeamsBot(MessageSender):
-    def send(self, message):
-        print("send message to teams")
-
-class SlackBot(MessageSender):
-  def __init__(self, channel):
-      self.channel = channel
-
+  @abc.abstractmethod
   def send(self, message):
-      print("send message to slack")
+      pass
 
-class AlertService:
-  def __init__(self, sender):
-      self.sender = sender
+class TeamsBot:
+    def send(self, message):
+        print(f"send '{message}' to teams")
 
-  def alert(message):
-      sender.send(message)
+class SlackBot:
+    def __init__(self, channel):
+        self.channel = channel
+
+    def send(self, message):
+        print(f"send '{message}' to slack")
 ```
 
 ::right::
