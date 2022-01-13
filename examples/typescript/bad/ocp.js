@@ -1,11 +1,9 @@
+"use strict";
 class ReportSender {
-  private report: string;
-
-  constructor(report: string) {
+  constructor(report) {
     this.report = report;
   }
-
-  send(send_type: string, receiver: string): void {
+  send(send_type, receiver) {
     switch (send_type) {
       case "email":
         console.log("email 전송", receiver);
@@ -18,7 +16,6 @@ class ReportSender {
     }
   }
 }
-
 (function () {
   const sender = new ReportSender("SOME_REPORT_DATA");
   sender.send("email", "john@test.com");

@@ -1,35 +1,25 @@
-interface MessageSender {
-  send(message: string): void;
-}
-
-class GoodTeamsBot implements MessageSender {
-  send(message: string): void {
+"use strict";
+class GoodTeamsBot {
+  send(message) {
     console.log(`send '${message}' to teams`);
   }
 }
-
-class GoodSlackBot implements MessageSender {
-  channel: string;
-  constructor(channel: string) {
+class GoodSlackBot {
+  constructor(channel) {
     this.channel = channel;
   }
-
-  send(message: string): void {
+  send(message) {
     console.log(`send '${message}' to teams`);
   }
 }
-
 class GoodAlertService {
-  sender: MessageSender;
-  constructor(sender: MessageSender) {
+  constructor(sender) {
     this.sender = sender;
   }
-
-  alert(message: string): void {
+  alert(message) {
     this.sender.send(message);
   }
 }
-
 (function () {
   const slackBot = new GoodSlackBot("HAPPY_CHANNEL");
   const alert_service = new GoodAlertService(slackBot);
