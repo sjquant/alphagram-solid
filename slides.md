@@ -368,17 +368,25 @@ class Rectangle:
          return self._width * self._height
 
 class Square(Rectangle):
-    pass
+    def set_width(self, w):
+        self._width = w
+        self._height = w
 
+    def set_height(self, h):
+        self._width = h
+        self._height = h
+```
+
+::right::
+
+<br/><br/>
+
+```py
 rect = Square()
 rect.set_width(4)
 rect.set_height(5)
 print(rect.area)  # It prints 25, instead of 20
 ```
-
-::right::
-
-<div class="fixed top-24">
 
 - 논리적으로 정사각형은 직사각형이지만,
 
@@ -390,7 +398,6 @@ print(rect.area)  # It prints 25, instead of 20
   
   (if 구문등으로 다르게 처리해야하므로)
 
-</div>
 ---
 layout: two-cols
 ---
@@ -753,11 +760,11 @@ class MessageSender(abc.ABC):
   def send(self, message):
       pass
 
-class TeamsBot:
+class TeamsBot(MessageSender):
     def send(self, message):
         print(f"send '{message}' to teams")
 
-class SlackBot:
+class SlackBot(MessageSender):
     def __init__(self, channel):
         self.channel = channel
 

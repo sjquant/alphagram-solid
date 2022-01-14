@@ -14,7 +14,13 @@ class Rectangle:
          return self._width * self._height
 
 class Square(Rectangle):
-    pass
+    def set_width(self, w):
+        self._width = w
+        self._height = w
+
+    def set_height(self, h):
+        self._width = h
+        self._height = h
 
 rect = Square()
 rect.set_width(4)

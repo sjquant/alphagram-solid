@@ -1,14 +1,15 @@
 import abc
+
 class MessageSender(abc.ABC):
   @abc.abstractmethod
   def send(self, message):
       pass
 
-class TeamsBot:
+class TeamsBot(MessageSender):
     def send(self, message):
         print(f"send '{message}' to teams")
 
-class SlackBot:
+class SlackBot(MessageSender):
     def __init__(self, channel):
         self.channel = channel
 
