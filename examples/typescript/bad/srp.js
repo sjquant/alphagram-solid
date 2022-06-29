@@ -2,8 +2,6 @@
 class DataSaver {
     read() {
         console.log("Reading data...");
-    }
-    parse() {
         console.log("Parsing data...");
     }
     save() {
@@ -13,6 +11,5 @@ class DataSaver {
 (function () {
     const saver = new DataSaver();
     saver.read();
-    saver.parse();
     saver.save();
 })();
