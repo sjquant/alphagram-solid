@@ -23,25 +23,6 @@ fonts:
 
 ---
 layout: center
-class: text-center
----
-
-# SOLID 원칙이란?
-
-<v-click>
-
-객체지향 프로그래밍(OOP) 설계의 5가지 '이상향'
-
-</v-click>
-
-<div v-click class="text-gray-500">객체지향 프로그래밍이 아니더라도 전반적으로 적용될 수 있는 원칙들!</div>
-
-<!--
-이상향이란 100% 이룰 수 있는 것은 아니다. (시간적 제약, 소프트웨어가 단순할 때는 오히려 SOLID를 지키는게 복잡할 수 있음). 다만, 방향은 SOLID를 향해있어야 함. 코드를 리팩토링/수정할수록 SOLID 원칙을 지켜나가야 한다.
--->
-
----
-layout: center
 class: 'text-center'
 ---
 
@@ -86,7 +67,6 @@ layout: center
 <v-click>
 <span> = <span class="text-red-500">수정하기 쉬운 코드</span>를 만들기 위한 5가지 원칙</span>
 </v-click>
-
 
 ---
 layout: center
@@ -136,7 +116,7 @@ manager.save()
 - DataSaver 책임: 읽기, 파싱, 저장 (해당 객체에 대한 책임 파악이 어려움 → 가독성⬇️)
 - 클래스 내 다른 역할을 수행하는 코드간의 의존성이 높아짐 > 코드 변경의 어려움/부작용
   
-  💬 기존에는 csv에서 read를 하고 있었는데, json read로 수정한다면?
+  💬 기존에는 csv에서 read를 하고 있었는데, json read도 지원해야한다면?
 
   💬 다양한 확장자(txt, csv, json, yaml 등)의 save를 지원해야한다면?
 
@@ -214,10 +194,10 @@ layout: two-cols
 
 ```py
 class ReportSender:
-    def __init__(self, report):
+    def __init__(self, report: str):
         self.report = report
 
-    def send(self, send_type, receiver):
+    def send(self, send_type: str, receiver: str):
         if send_type == "email":
             print("email 전송")
         elif send_type == "printer":
@@ -285,7 +265,7 @@ class MSTeamsSender(BaseReportSender):
 <br/><br/>
 
 ```py
-def get_sender(sender_type):
+def get_sender(sender_type: str) -> BaseReportSender:
     if sender_type == "email":
         return EmailSender("report data", "admin@test.com")
     elif sender_type == "msteams":
@@ -319,6 +299,8 @@ layout: center
 
 자식 클래스가 부모 클래스를 대체하여도 프로그램이 의도한대로 동작하여야 한다.
 
+= 메소드의 오버라이딩이 부모 클래스 메소드의 본질을 바꿔선 안된다.
+
 ---
 layout: two-cols
 ---
@@ -331,22 +313,22 @@ class Rectangle:
         self._width = 0
         self._height = 0
 
-    def set_width(self, w):
+    def set_width(self, w: float):
         self._width = w
   
-    def set_height(self, h):
+    def set_height(self, h: float):
         self._height = h
 
     @property
-    def area(self):
+    def area(self) -> float:
          return self._width * self._height
 
 class Square(Rectangle):
-    def set_width(self, w):
+    def set_width(self, w: float):
         self._width = w
         self._height = w
 
-    def set_height(self, h):
+    def set_height(self, h: float):
         self._width = h
         self._height = h
 ```
@@ -386,7 +368,7 @@ class Shape(abc.ABC):
       pass
 
 class Rectangle(Shape):
-    def __init__(self, w, h):
+    def __init__(self, w: float, h: float):
         self._width = w
         self._height = h
 
@@ -395,7 +377,7 @@ class Rectangle(Shape):
       return self._width * self._height
 
 class Square(Shape):
-    def __init__(self, l):
+    def __init__(self, l: float):
         self._length = l
 
     @property
@@ -436,7 +418,7 @@ layout: two-cols
 
 ```py
 class Bird:
-    def eat(self, food):
+    def eat(self, food: str):
         print(f"I can eat {food}")
 
     def fly(self):
@@ -464,6 +446,8 @@ for bird in birds:
 - Chicken도 분명히 Bird이지만 리스코프 원칙 위배
   
   → <span class="text-red-500">is-a</span> 관계라고 해서 모두 상속이 바람직한 것은 아님
+
+  → 함수 오버라이딩을 할 때 주의하자!
 
 ---
 layout: two-cols
@@ -504,6 +488,8 @@ for each in flyables:
 
 - 요즘에는 상속보다 Interface (Trait)등을 활용하는 쪽으로 언어가 발전하고 있다. (e.g. `golang`, `rust`)
 
+→ 조금 더 유연한 코드를 작성할 수 있다.
+
 <!--
 Plane은 새가 아니다. 새일 필요가 없다.
 
@@ -533,26 +519,26 @@ layout: two-cols
 ```py
 class Character(abc.ABC):
     @abc.abstractmehtod
-    def attack(self, other):
+    def attack(self, other: str):
         print(f"I attack {other}")
   
     @abc.abstractmehtod
-    def talk(self, other):
+    def talk(self, other: str):
         print(f"I talk to {other}")
 
     @abc.abstractmehtod
-    def move(self, x, y):
+    def move(self, x: int, y: int):
         print(f"I move to ({x}, {y})")
 
 class Monster(Character):
-    def attack(self, other):
+    def attack(self, other: str):
         print(f"Monster attack {other}")
   
-    def move(self, x, y):
+    def move(self, x: int, y: int):
         print(f"Monster move to ({x}, {y})")
 
 class NPC(Character):
-    def talk(self, other):
+    def talk(self, other: str):
         print(f"NPC talk to {other}")
 ```
 
@@ -577,27 +563,29 @@ layout: two-cols
 # GOOD
 
 ```py
-class Attackable(abc.ABC):
+from typing import Protocol
+
+class Attackable(Protocol):
     def attack(self, other):
-        print(f"I attack {other}")
+        ...
 
-class Talkable(abc.ABC):
+class Talkable(Protocol):
     def talk(self, other):
-        print(f"I talk to {other}")
+        ...
 
-class Movable(abc.ABC):
+class Movable(Protocol):
     def move(self, x, y):
-        print(f"I move to ({x}, {y})")
+        ...
 
-class NPC(Talkable):
-    def talk(self, other):
+class NPC:
+    def talk(self, other: str):
         print(f"NPC talk to {other}")
 
-class Monster(Attackable, Movable):
-    def attack(self, other):
+class Monster:
+    def attack(self, other: str):
         print(f"Monster attack {other}")
   
-    def move(self, x, y):
+    def move(self, x: int, y: int):
         print(f"Monster move to ({x}, {y})")
 ```
 
@@ -614,9 +602,9 @@ npc.talk("jane")
     
 ```
 
-- 필요한 속성(역할)만 사용
+- 필요한 속성(역할)만 사용 - 사이드 이펙트  ⬇️
 - 가독성 ⬆️ - 각 클래스가 어떤 역할을 하는지 쉽게 알 수 있음
-- 우리가 Vue에서 사용하는 Mixin/Composition API도 유사한 관점에서 바라보자
+- 우리가 Vue에서 사용하는 Mixin도 유사한 관점에서 바라보자
 
 <!--
 - Able이라는 단어를 많이쓰는 것 언급 (자격)
@@ -632,8 +620,8 @@ layout: center
 
 ## 의존성 역전 원칙
 
-- 상위 모듈은 하위 모듈에 의존해서는 안된다. **둘 다 추상 모듈에 의존**해야 한다.
-- 추상 모듈은 구체화된 모듈에 의존해서는 안된다. **구체화된 모듈은 추상 모듈에 의존해야 한다.**
+- 상위 모듈은 하위 모듈에 의존해서는 안된다. **모두 추상 모듈에 의존**해야 한다.
+- 추상 모듈은 구체화된 모듈에 의존해서는 안된다. **구체화된 모듈이 추상 모듈에 의존해야 한다.**
 
 <!--
 - 설명이 어려울 수 있으나, 결국 위에서 계속 했던 내용임
@@ -647,18 +635,18 @@ layout: two-cols
 
 ```py
 class TeamsBot:
-    def send_message_to_teams(self, message):
+    def send_message_to_teams(self, message: str):
         print("send message to teams")
 
 class SlackBot:
-    def send_alert_to_slack(self, channel, message):
+    def send_alert_to_slack(self, channel: str, message: str):
         print("send message to slack")
 
 class AlertService:
     def __init__(self):
         self.teams_bot = TeamsBot()
 
-    def alert(self, message):
+    def alert(self, message: str):
         self.teams_bot.send_message_to_teams(message)
 
 alert_service = AlertService()
@@ -688,14 +676,14 @@ class MessageSender(abc.ABC):
         raise ValueError("Something went wrong")
 
 class TeamsBot(MessageSender):
-    def send_message_to_teams(self, message):
+    def send_message_to_teams(self, message: str):
         print("send message to teams")
 
 class SlackBot(MessageSender):
-    def __init__(self, channel):
+    def __init__(self, channel: str):
         self.channel = channel
 
-    def send_message_to_slack(self, message):
+    def send_message_to_slack(self, message: str):
         print("send message to slack")
 ```
 
@@ -705,10 +693,10 @@ class SlackBot(MessageSender):
 
 ```py
 class AlertService:
-  def __init__(self, sender):
+  def __init__(self, sender: MessageSender):
     self.sender = sender
 
-  def alert(message):
+  def alert(message: str):
     sender.send(message)
 
 sender = TeamsBot()
@@ -731,18 +719,18 @@ layout: two-cols
 ```py
 class MessageSender(abc.ABC):
   @abc.abstractmethod
-  def send(self, message):
+  def send(self, message: str):
       pass
 
 class TeamsBot(MessageSender):
-    def send(self, message):
+    def send(self, message: str):
         print(f"send '{message}' to teams")
 
 class SlackBot(MessageSender):
-    def __init__(self, channel):
+    def __init__(self, channel: str):
         self.channel = channel
 
-    def send(self, message):
+    def send(self, message: str):
         print(f"send '{message}' to slack")
 ```
 
@@ -750,7 +738,26 @@ class SlackBot(MessageSender):
 
 <br/><br/>
 
+```py
+class AlertService:
+  def __init__(self, sender: MessageSender):
+    self.sender = sender
+
+  def alert(message: str):
+    sender.send(message)
+
+sender = TeamsBot()
+alert_service = AlertService(sender)
+alert_service.alert()
+```
+
 - 하위 모듈과 상위 모듈이 모두 추상화된 모듈 `MessageSender`에 의존하게 함으로써 다른 모듈로 변경이 자유로움
+
+---
+layout: center
+---
+
+## 그럼 이제 우리 모두 SOLID를 완벽히 지켜서 프로그래밍 해야 할까요?
 
 ---
 layout: center
@@ -766,19 +773,21 @@ layout: center
 
 <v-click>
 
-하지만, 우리의 코드가 성장함에 따라 점차 도달해야 하는 <span class="text-red-500">지향점</span>이다.
-
-우리에겐 '리팩토링'이 있다.
+잘못된 추상화로 코드의 변경이 더 어려울 수도 있다.
 
 </v-click>
 
----
-layout: center
----
+<v-click>
 
-# 코드리뷰에 SOLID를 근거로 잘 활용합시다.
+하지만, 우리의 코드가 성장함에 따라 점차 도달해야 하는 <span class="text-red-500">지향점</span>이다.
 
-무조건적으로 지켜야하는 것은 아니지만 지키지 않는다면 충분한 근거가 있어야 한다.
+</v-click>
+
+<v-click>
+
+우리에겐 <span class="text-red-500">'리팩터링'</span>이 있다.
+
+</v-click>
 
 ---
 layout: center

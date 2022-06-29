@@ -38,4 +38,4 @@ move_character(a_monster, 1, 2)
 a_npc = NPC()
 talk_character(a_npc, "jane")
 
-talk_character(a_monster, "jane")  # It will show an error with type checking enabled before running
+talk_character(a_monster, "jane")  # type checking error before running
